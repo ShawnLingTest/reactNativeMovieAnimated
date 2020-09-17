@@ -112,9 +112,15 @@ const Ticker = ({ scrollX }: { scrollX: Animated.Value }) => {
   )
 }
 
-const Pagination = () => {
+const Pagination = ({scrollX}: { scrollX: Animated.Value }) => {
+  const inputRange = [-width, 0, width];
+  const translateX = scrollX.interpolate({
+    inputRange,
+    outputRange: [-DOT_SIZE, 0, DOT_SIZE],
+  })
   return (
     <View style={styles.pagination}>
+      <Animated.View style={[styles.paginationIndicator, { transform: [{ translateX }] }]}/>
       {
         data.map((item) => {
           return (
@@ -152,7 +158,7 @@ const App = () => {
         source={require('./assets/ue_black_logo.png')}
         style={styles.logo}
       />
-      <Pagination />
+      <Pagination scrollX={scrollX}/>
       <Ticker scrollX={scrollX}/>
     </View>
   )
@@ -193,7 +199,15 @@ const styles = StyleSheet.create({
   paginationDot: {
     width: DOT_SIZE * .3,
     height: DOT_SIZE * .3,
-    borderRadius: DOT_SIZE * .15
+    borderRadius: DOT_SIZE * .15,
+  },
+  paginationIndicator: {
+    position: "absolute",
+    width: DOT_SIZE,
+    height: DOT_SIZE,
+    borderRadius: DOT_SIZE / 2,
+    borderWidth: 2,
+    borderColor: '#ddd',
   },
   itemContainer: {
     width,
